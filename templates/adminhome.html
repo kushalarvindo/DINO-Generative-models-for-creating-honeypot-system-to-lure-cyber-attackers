@@ -1,0 +1,99 @@
+{% extends "nav.html" %}
+{% block content %}
+{% load static %}
+<style>
+  /* --- ADMIN RADAR SCANNER --- */
+        .radar-container {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background-color: rgba(166, 227, 161, 0.05); 
+            border: 2px solid #a6e3a1; /* Neon green edge */
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(166, 227, 161, 0.3);
+            flex-shrink: 0;
+        }
+
+        /* Radar Crosshairs */
+        .radar-container::after, .radar-container::before {
+            content: '';
+            position: absolute;
+            background: rgba(166, 227, 161, 0.4);
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .radar-container::after { width: 100%; height: 1px; }
+        .radar-container::before { width: 1px; height: 100%; }
+
+        /* The Sweeping Beam */
+        .radar-sweep {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 5px; height: 35px;
+            background: conic-gradient(from 0deg, rgba(166, 227, 161, 0) 0%, rgba(166, 227, 161, 0.7) 100%);
+            transform-origin: 0% 0%;
+            animation: radarSpin 2s linear infinite;
+        }
+
+        @keyframes radarSpin {
+            100% { transform: rotate(360deg); }
+        }
+</style>
+    <section class="contact_section layout_padding py-5 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="container">
+          <div class="d-flex justify-content-center align-items-center mb-5 gap-4">
+            
+            <div class="radar-container">
+                <div class="radar-sweep"></div>
+            </div>
+
+            <div class="text-start">
+              <h5 class="text-uppercase cyber-glitch" data-value="LIVE MONITORING" style="letter-spacing: 5px; color: var(--accent);">LIVE MONITORING</h5>
+              <h1 class="display-5 mb-0 cyber-glitch" data-value="System Threat Logs" style="color: var(--lavender);">System Threat Logs</h1>
+            </div>
+          </div>
+
+          <div class="m3-card glass-card table-responsive p-4">
+            <table class="table table-bordered table-hover align-middle text-center" style="border-color: var(--surface1);">
+              
+              <thead style="background-color: var(--mantle);">
+                <tr>
+                  <th scope="col" class="py-3 px-4">Id</th>
+                  <th scope="col" class="py-3 px-4">Source IP</th>
+                  <th scope="col" class="py-3 px-4">Dest_Port</th>
+                  <th scope="col" class="py-3 px-4">Protocol</th>
+                  <th scope="col" class="py-3 px-4">Action</th>
+                  <th scope="col" class="py-3 px-4">Payload</th>
+                  <th scope="col" class="py-3 px-4">Outcome</th>
+                </tr>
+              </thead>
+              
+              <tbody>
+              {% for i in honey %}
+                <tr>
+                  <th scope="row" class="py-3" style="color: var(--overlay0);">#{{i.id}}</th>
+                  <td class="py-3" style="font-family: monospace; color: var(--accent);">{{i.Source_IP}}</td>
+                  <td class="py-3">{{i.Dest_Port}}</td>
+                  
+                  <td class="py-3">
+                      <span class="badge" style="background-color: var(--surface1); border: 1px solid var(--overlay0); color: var(--text); padding: 6px 12px;">
+                          {{i.Protocol}}
+                      </span>
+                  </td>
+                  
+                  <td class="py-3">{{i.Action}}</td>
+                  
+                  <td class="py-3 text-start" style="font-family: monospace; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                      {{i.Payload}}
+                  </td>
+                  
+                  <td class="py-3" style="font-weight: bold; color: var(--lavender);">{{i.Outcome}}</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+    </section>
+{% endblock %}

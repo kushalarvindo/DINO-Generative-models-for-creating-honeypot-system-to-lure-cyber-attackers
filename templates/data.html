@@ -1,0 +1,137 @@
+{% extends "nav.html" %}
+{% block content %}
+{% load static %}
+
+<style>
+    /* --- The Stealth Reveal Rectangle --- */
+    .btn-stealth-reveal {
+        background-color: transparent !important;
+        border: 1px dashed var(--overlay0) !important;
+        color: var(--overlay0) !important;
+        border-radius: 6px !important; /* Small rectangular look */
+        padding: 4px 20px !important;
+        font-size: 0.75rem;
+        letter-spacing: 3px;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+    }
+    .btn-stealth-reveal:hover {
+        border-color: var(--lavender) !important;
+        color: var(--lavender) !important;
+        box-shadow: 0 0 10px rgba(180, 190, 254, 0.2);
+        background-color: rgba(180, 190, 254, 0.05) !important;
+    }
+
+    /* --- M3 Style Breach Button (Red) --- */
+    .btn-m3-danger {
+        color: #ffb4ab !important; 
+        border: 2px solid #ffb4ab !important; 
+        background-color: transparent !important;
+        border-radius: 50px !important; /* Pill shape matching navbar */
+        padding: 8px 24px !important;
+        font-weight: bold;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+    }
+    .btn-m3-danger:hover {
+        background-color: #ffb4ab !important; 
+        color: #1a1a2e !important; 
+        box-shadow: 0 0 20px rgba(255, 180, 171, 0.4) !important; 
+        transform: scale(1.05); 
+    }
+
+    /* --- M3 Style Scan Button (Yellow) --- */
+    .btn-m3-warning {
+        color: #ffdc82 !important; 
+        border: 2px solid #ffdc82 !important; 
+        background-color: transparent !important;
+        border-radius: 50px !important; /* Pill shape matching navbar */
+        padding: 8px 24px !important;
+        font-weight: bold;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+    }
+    .btn-m3-warning:hover {
+        background-color: #ffdc82 !important; 
+        color: #1a1a2e !important; 
+        box-shadow: 0 0 20px rgba(255, 220, 130, 0.4) !important; 
+        transform: scale(1.05); 
+    }
+</style>
+
+  <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
+    
+    <div class="container">
+        <div class="text-center mx-auto mb-5" style="max-width: 600px;">
+            <h5 class="text-uppercase" style="letter-spacing: 5px; color: var(--accent);">Threat Analysis</h5>
+            <h1 class="display-5 mb-0" style="color: var(--lavender);">Input Data Payload</h1>
+        </div>
+        <br>
+        <div class="row g-5 justify-content-center">
+            <div class="col-lg-8 wow slideInUp" data-wow-delay="0.3s">
+                <div class="card glass-card p-4 shadow" style="background: transparent; border: none;">
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" placeholder="Source IP" name="src" id="src">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" placeholder="Destination Port" name="dest" id="dest">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" placeholder="Protocol" name="protocol" id="protocol">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" placeholder="Action" name="action" id="action">
+                            </div>
+                            <div class="col-12">
+                                <input type="text" class="form-control" placeholder="Payload" name="pay" id="pay">
+                            </div>
+                            <div class="col-12 mt-4">
+                                <button class="btn btn-primary w-100 py-3" type="submit">EXECUTE PREDICTION</button>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button class="btn btn-stealth-reveal" type="button" data-bs-toggle="collapse" data-bs-target="#demoCollapse" aria-expanded="false" aria-controls="demoCollapse">
+                                  developer tools 
+                            </button>
+                        </div>
+                        
+                        <div class="collapse mt-3" id="demoCollapse">
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-m3-danger w-100" onclick="loadBreach()">TEST: BREACH</button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-m3-warning w-100" onclick="loadFail()">TEST: SCAN</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+</div>
+
+<script>
+    function loadBreach() {
+        document.getElementById('src').value = '24.119.174.130';
+        document.getElementById('dest').value = '80';
+        document.getElementById('protocol').value = 'RDP';
+        document.getElementById('action').value = 'File upload';
+        document.getElementById('pay').value = 'Sample payload 5';
+    }
+
+    function loadFail() {
+        document.getElementById('src').value = '17.103.246.192';
+        document.getElementById('dest').value = '445';
+        document.getElementById('protocol').value = 'RDP';
+        document.getElementById('action').value = 'Port scan';
+        document.getElementById('pay').value = 'Sample payload 156';
+    }
+</script>
+{% endblock %}

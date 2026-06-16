@@ -1,0 +1,99 @@
+{% extends "nav.html" %}
+{% block content %}
+
+<style>
+    /* --- THREAT DASHBOARD STYLES --- */
+    .threat-card {
+        max-width: 650px;
+        margin: 60px auto;
+        padding: 40px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Green Secure State */
+    .status-secure {
+        border: 2px solid #a6e3a1 !important;
+        box-shadow: 0 0 30px rgba(166, 227, 161, 0.15) !important;
+    }
+
+    /* Red Threat State with Pulsing Animation */
+    .status-threat {
+        border: 2px solid #f38ba8 !important;
+        box-shadow: 0 0 30px rgba(243, 139, 168, 0.3) !important;
+        animation: threatPulse 1.5s infinite;
+    }
+
+    @keyframes threatPulse {
+        0%, 100% { box-shadow: 0 0 30px rgba(243, 139, 168, 0.3) !important; }
+        50% { box-shadow: 0 0 60px rgba(243, 139, 168, 0.6) !important; }
+    }
+
+    /* High-Tech Data Grid */
+    .data-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-top: 30px;
+        text-align: left;
+    }
+
+    .data-item {
+        background: rgba(0,0,0,0.4);
+        padding: 15px;
+        border-radius: 12px;
+        border: 1px solid var(--surface1);
+    }
+
+    .data-label { color: var(--subtext0); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+    .data-value { color: var(--lavender); font-family: 'Courier New', Courier, monospace; font-size: 1.1rem; font-weight: bold; }
+</style>
+
+<div class="container py-5">
+ 
+    
+    <div class="threat-card glass-card {% if prediction == 'Success' %}status-threat{% else %}status-secure{% endif %}">
+        {% if prediction == 'Success' %}
+            <i class="fas fa-radiation fa-4x mb-3" style="color: #f38ba8;"></i>
+            <h2 style="color: #f38ba8; letter-spacing: 3px; font-weight: bold;">CRITICAL THREAT DETECTED</h2>
+            <p style="color: var(--subtext0);">Breach pattern identified. Immediate countermeasures advised.</p>
+        {% else %}
+            <i class="fas fa-shield-alt fa-4x mb-3" style="color: #a6e3a1;"></i>
+            <h2 style="color: #a6e3a1; letter-spacing: 3px; font-weight: bold;">SYSTEM SECURE</h2>
+            <p style="color: var(--subtext0);">Attack blocked or failed. Decoy network integrity maintained.</p>
+        {% endif %}
+
+        <div class="data-grid">
+            <div class="data-item">
+                <div class="data-label">Source IP</div>
+                <div class="data-value">{{ src }}</div>
+            </div>
+            <div class="data-item">
+                <div class="data-label">Target Port</div>
+                <div class="data-value">{{ dest }}</div>
+            </div>
+            <div class="data-item">
+                <div class="data-label">Protocol</div>
+                <div class="data-value">{{ protocol }}</div>
+            </div>
+            <div class="data-item">
+                <div class="data-label">Attack Vector</div>
+                <div class="data-value">{{ action }}</div>
+            </div>
+        </div>
+
+        <div class="mt-3">
+            <div class="data-item text-start">
+                <div class="data-label mb-1">Intercepted Payload</div>
+                <div class="data-value" style="word-break: break-all; color: var(--accent); font-size: 0.95rem;">
+                    {{ pay }}
+                </div>
+            </div>
+        </div>
+        <a href="/data" class="btn btn-primary btn-shimmer mt-4 w-100 py-3" style="font-size: 1.1rem; letter-spacing: 2px;">SCAN NEW TRAFFIC</a>
+    </div>
+    
+</div>
+<br><br>
+{% endblock %}

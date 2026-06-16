@@ -1,0 +1,610 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>DEEPDECOY</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="{% static 'img/logo.png' %}" rel="icon">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Outfit:wght@300;600&display=swap" rel="stylesheet"> 
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <style>
+        :root {
+            --base: #000000;
+            --surface0: #1e1e2e;
+            --surface1: #313244;
+            --overlay0: #6c7086;
+            --text: #cdd6f4;
+            --subtext0: #a6adc8;
+            --lavender: #b4befe;
+            --mantle: #181825;
+            --crust: #11111b;
+            --accent: #f5c2e7;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--base) !important;
+            color: var(--text) !important;
+            font-family: 'Outfit', 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- 1. HYBRID CURSOR SYSTEM --- */
+        
+        /* Hide default cursor everywhere */
+        body {
+            cursor: none !important; 
+        }
+
+        /* The Custom Cyber Reticle */
+        .cursor-dot,
+        .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none; 
+            transition: opacity 0.2s ease-in-out; 
+        }
+
+        .cursor-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--accent); 
+        }
+
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--lavender);
+        }
+
+        /* Hide native cursor over interactive elements so our DOM image shows */
+        .glass-card, input, select, textarea, button, a {
+            cursor: none !important;
+        }
+
+        /* 2. The Resizable HTML Minecraft Cursor */
+        #mcCursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 16px; /* ✨ RESIZE YOUR MINECRAFT CURSOR HERE ✨ */
+            z-index: 10000;
+            pointer-events: none;
+            display: none; /* Hidden by default */
+        }
+
+        /* 3. The Custom Loading XP Hourglass */
+        body.system-processing, 
+        body.system-processing * {
+            cursor: none !important; 
+        }
+
+        .cyber-loader {
+            display: none; 
+            position: fixed;
+            z-index: 10001;
+            pointer-events: none;
+            width: 24px;
+            height: 24px;
+            transform: translate(-50%, -50%);
+        }
+
+        body.system-processing .cyber-loader {
+            display: block;
+        }
+
+        .cyber-loader::after {
+            content: " ";
+            display: block;
+            border-radius: 50%;
+            width: 0;
+            height: 0;
+            margin: 4px;
+            box-sizing: border-box;
+            border: 12px solid var(--accent);
+            border-color: var(--accent) transparent var(--lavender) transparent;
+            animation: cyberHourglass 1.2s infinite cubic-bezier(0.5, 0, 0.5, 1);
+        }
+
+        @keyframes cyberHourglass {
+            0% { transform: rotate(0); animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19); }
+            50% { transform: rotate(900deg); animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1); }
+            100% { transform: rotate(1800deg); }
+        }
+
+        /* --- REST OF YOUR UI CSS --- */
+        .navbar-custom {
+            background: rgba(24, 24, 37, 0.65) !important; 
+            backdrop-filter: blur(16px) !important; 
+            -webkit-backdrop-filter: blur(16px) !important; 
+            border-bottom: 1px solid rgba(180, 190, 254, 0.1) !important; 
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5) !important; 
+            padding: 1rem 2rem;
+        }
+
+        .navbar-brand h1 {
+            color: var(--lavender) !important;
+            font-size: 2.4rem; 
+            letter-spacing: 4px; 
+            text-transform: uppercase;
+            font-family: 'Minecraft', sans-serif; 
+            text-shadow: 0 0 10px rgba(180, 190, 254, 0.5); 
+            margin-top: 5px !important; 
+        }
+
+        .cd-inner-glow {
+            position: absolute;
+            top: 50%;
+            left: 7%;
+            transform: translate(-50%, -50%);
+            width: 50px; 
+            height: 70px;
+            background: radial-gradient(circle, rgba(116, 161, 252, 0.434) 0%, transparent 70%);
+            border-radius: 100%;
+            z-index: 0;
+            pointer-events: none; 
+            animation: pulseGlow 4s infinite alternate ease-in-out; 
+        }
+
+        @keyframes pulseGlow {
+            0% { opacity: 0.7; transform: translate(-50%, -50%) scale(0.95); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+        }
+
+        .navbar-custom .nav-link {
+            color: var(--subtext0) !important;
+            padding: 10px 24px !important; 
+            border-radius: 25px !important; 
+            border: 1px solid var(--surface1) !important; 
+            background-color: rgba(49, 50, 68, 0.3); 
+            transition: all 0.3s ease;
+            font-weight: 500;
+            margin: 0 5px;
+        }
+
+        .navbar-custom .nav-link:hover, 
+        .navbar-custom .nav-link.active {
+            background-color: var(--surface0) !important;
+            color: var(--lavender) !important;
+            border: 1px solid var(--lavender) !important; 
+            box-shadow: 0 0 15px rgba(180, 190, 254, 0.3), inset 0 0 10px rgba(180, 190, 254, 0.1);
+            transform: translateY(-2px); 
+        }
+
+        .logo-dots {
+            display: flex;
+            flex-direction: column;
+            gap: 8px; 
+            position: relative;
+            z-index: 1;
+            margin-left: 5px;
+            justify-content: center;
+        }
+
+        .dot-top, .dot-bottom {
+            background-color: var(--accent); 
+            border-radius: 50%;
+            animation: hardwarePulse 2s infinite ease-in-out;
+        }
+
+        .dot-top { width: 5px; height: 5px; animation-delay: 0s; }
+        .dot-bottom { width: 5px; height: 5px; animation-delay: 1s; }
+
+        @keyframes hardwarePulse {
+            0%, 100% { transform: scale(0.7); box-shadow: 0 0 2px var(--accent); opacity: 0.4; }
+            50% { transform: scale(1.0); box-shadow: 0 0 12px var(--accent), 0 0 20px var(--lavender); opacity: 1; }
+        }
+
+        .cyber-footer {
+            position: relative;
+            text-align: center;
+            padding: 50px 20px;
+            background-color: var(--crust);
+            margin-top: auto;
+            overflow: hidden; 
+            border-top: 1px solid var(--surface1);
+        }
+
+        .footer-scanner {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), var(--lavender), transparent);
+            animation: footerScan 4s linear infinite;
+        }
+
+        @keyframes footerScan {
+            0% { left: -100%; }
+            100% { left: 200%; }
+        }
+
+        .footer-title {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            color: var(--lavender);
+            font-family: 'Courier New', Courier, monospace;
+            letter-spacing: 2px;
+            transition: all 0.4s ease;
+        }
+
+        .cyber-footer:hover .footer-title {
+            letter-spacing: 8px; 
+            text-shadow: 0 0 8px var(--lavender);
+        }
+
+        .footer-subtitle {
+            color: var(--subtext0);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .footer-status {
+            color: var(--overlay0);
+            margin-top: 20px;
+            font-size: 0.9rem;
+            font-family: 'Courier New', Courier, monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-indicator {
+            color: #a6e3a1; 
+            text-shadow: 0 0 8px rgba(166, 227, 161, 0.6);
+            animation: statusFlicker 5s infinite; 
+        }
+
+        @keyframes statusFlicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; text-shadow: 0 0 8px rgba(166, 227, 161, 0.6); }
+            20%, 22%, 24%, 55% { opacity: 0.3; text-shadow: none; } 
+        }
+
+        .blinking-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 13.2px;
+            background-color: var(--accent);
+            vertical-align: bottom;
+            margin-left: 6px;
+            margin-bottom: 3px;
+            animation: blinker 1s step-end infinite;
+        }
+
+        @keyframes blinker {
+            50% { opacity: 0; }
+        }
+        
+        .form-control {
+            background-color: var(--base) !important;
+            border: 1px solid var(--surface1) !important;
+            color: var(--text) !important;
+            border-radius: 12px;
+            height: 55px;
+        }
+        .form-control:focus {
+            border-color: var(--lavender) !important;
+            box-shadow: 0 0 0 0.25rem rgba(180, 190, 254, 0.25) !important;
+        }
+        .form-control::placeholder { color: var(--overlay0) !important; }
+
+        .btn-primary {
+            background-color: var(--lavender) !important;
+            color: var(--base) !important;
+            border: none !important;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: var(--accent) !important;
+        }
+
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background-color: var(--mantle); border-left: 1px solid var(--surface1); }
+        ::-webkit-scrollbar-thumb { background-color: var(--accent); border-radius: 10px; border: 2px solid var(--mantle); }
+        ::-webkit-scrollbar-thumb:hover { background-color: var(--lavender); cursor: pointer; }
+
+        .glass-card {
+            background: rgba(30, 30, 46, 0.5) !important; 
+            backdrop-filter: blur(12px) !important; 
+            -webkit-backdrop-filter: blur(12px) !important; 
+            border: 1px solid rgba(180, 190, 254, 0.15) !important; 
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4) !important;
+            border-radius: 20px;
+        }
+
+        .btn-m3-logout {
+            color: #ffb4ab !important; 
+            border: 2px solid #ffb4ab !important; 
+            background-color: transparent !important;
+            border-radius: 50px !important; 
+            padding: 8px 24px !important;
+            font-weight: bold;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+        }
+        .btn-m3-logout:hover {
+            background-color: #ffb4ab !important; 
+            color: #1a1a2e !important; 
+            box-shadow: 0 0 20px rgba(255, 180, 171, 0.4) !important; 
+            transform: scale(1.05); 
+        }
+
+        .btn-m3-admin {
+            color: #9ca3af !important; 
+            border: 2px solid #9ca3af !important; 
+            background-color: transparent !important;
+            border-radius: 50px !important; 
+            padding: 8px 24px !important;
+            font-weight: bold;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+        }
+        .btn-m3-admin:hover {
+            background-color: #313244 !important; 
+            border-color: #313244 !important; 
+            color: #f3f4f6 !important; 
+            box-shadow: 0 4px 15px rgba(49, 50, 68, 0.5) !important; 
+            transform: scale(1.05);
+        }
+
+        .btn-m3-home {
+            color: var(--lavender) !important; 
+            border: 2px solid var(--lavender) !important; 
+            background-color: transparent !important;
+            border-radius: 50px !important; 
+            padding: 8px 24px !important;
+            font-weight: bold;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px; 
+        }
+        .btn-m3-home:hover {
+            background-color: var(--lavender) !important; 
+            color: var(--base) !important; 
+            box-shadow: 0 0 15px rgba(180, 190, 254, 0.5) !important; 
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="particles-js" style="position: fixed; width: 100vw; height: 100vh; top: 0; left: 0; background-color: var(--base); z-index: -1;"></div>
+    
+    <div class="cursor-dot" data-cursor-dot></div>
+    <div class="cursor-outline" data-cursor-outline></div>
+
+    <img src="{% static 'img/mc-cursor.png' %}" id="mcCursor" alt="cursor">
+
+    <div class="cyber-loader" id="cyberLoader"></div>
+    
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+        <a href="/" class="navbar-brand" style="position: relative; display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <div class="cd-inner-glow"></div>
+            <img src="{% static 'img/logo.png' %}" height="30px" alt="" onerror="this.style.display='none'" style="position: relative; z-index: 1;">
+            <h1 class="m-0" style="position: relative; z-index: 1; left: 5%;">
+                DEEPDECOY
+            </h1>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" style="border-color: var(--lavender);">
+            <i class="fa fa-bars" style="color: var(--lavender);"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto py-0">
+                <a href="/" class="btn btn-m3-home me-2"><i class="fas fa-home"></i> </a>
+                {% if user.is_authenticated %}
+                <a href="#" class="nav-item nav-link" style="color: var(--accent) !important;">Welcome, {{user.username.capitalize}}</a>
+                <a href="/data" class="nav-item nav-link">Predict</a>
+                <a href="/logout" class="btn btn-m3-logout ms-3">Logout</a>
+                {% else %}
+                <a href="register" class="nav-item nav-link">Register</a>
+                <a href="login" class="nav-item nav-link">Login</a>
+                <a href="/adminlogin" class="btn btn-m3-admin ms-3">Admin</a>
+                {% endif %}
+                <div class="logo-dots" style="left: 2.2%;">
+                <div class="dot-top"></div>
+                <div class="dot-bottom"></div>
+            </div>
+            </div>
+        </div>
+    </nav>
+
+    <main style="flex-grow: 1;">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="cyber-footer">
+        <div class="footer-scanner"></div>
+        <h1 class="footer-title">DEEP DECOY</h1>
+        <p class="footer-subtitle">Harnessing Generative AI for Proactive Cyber Defense</p>
+        <h3 class="footer-status">
+            SYSTEM STATUS: <span class="status-indicator">OPERATIONAL</span><span class="blinking-cursor"></span> &copy; 2026
+        </h3>  
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'lib/wow/wow.min.js' %}"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    
+    <script>
+        const cursorDot = document.querySelector("[data-cursor-dot]");
+        const cursorOutline = document.querySelector("[data-cursor-outline]");
+        const cyberLoader = document.getElementById("cyberLoader");
+        const mcCursor = document.getElementById("mcCursor"); // The HTML Image Cursor
+
+        // Secretly memorize the exact mouse coordinates at all times
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+
+        window.addEventListener("mousemove", function (e) {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            // ✨ THE FIX: IF LOADING, LOCK THE CURSORS ✨
+            if (document.body.classList.contains('system-processing')) {
+                cursorDot.style.opacity = '0';
+                cursorOutline.style.opacity = '0';
+                mcCursor.style.display = 'none'; // Force hide Minecraft cursor
+                
+                // Only let the hourglass move
+                cyberLoader.style.left = `${mouseX}px`;
+                cyberLoader.style.top = `${mouseY}px`;
+                return; // Stop the script here so it doesn't draw the other cursors!
+            }
+
+            // Normal Reticle dot
+            cursorDot.style.left = `${mouseX}px`;
+            cursorDot.style.top = `${mouseY}px`;
+
+            // Normal Reticle outline (smooth follow)
+            cursorOutline.animate({
+                left: `${mouseX}px`,
+                top: `${mouseY}px`
+            }, { duration: 500, fill: "forwards" });
+
+            // Normal Minecraft Image
+            mcCursor.style.left = `${mouseX}px`;
+            mcCursor.style.top = `${mouseY}px`;
+        });
+
+        // Hide Reticle & Show Minecraft when hovering over UI areas
+        window.addEventListener("mouseover", (e) => {
+            // ✨ THE FIX: IGNORE HOVERS IF LOADING ✨
+            if (document.body.classList.contains('system-processing')) return; 
+
+            if (e.target.closest('.glass-card, a, button, input, select, textarea')) {
+                cursorDot.style.opacity = '0'; 
+                cursorOutline.style.opacity = '0'; 
+                mcCursor.style.display = 'block'; // Show Minecraft Cursor
+            } else {
+                cursorDot.style.opacity = '1'; 
+                cursorOutline.style.opacity = '1'; 
+                mcCursor.style.display = 'none';  // Hide Minecraft Cursor
+            }
+        });
+
+        // Trigger Loader hourglass on Submit
+        document.addEventListener('DOMContentLoaded', function() {
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault(); 
+                    document.body.classList.add('system-processing');
+                    
+                    // Instantly hide everything the millisecond you click
+                    cursorDot.style.opacity = '0';
+                    cursorOutline.style.opacity = '0';
+                    mcCursor.style.display = 'none';
+                    
+                    // Snap the loader to the exact click coordinates
+                    cyberLoader.style.left = `${mouseX}px`;
+                    cyberLoader.style.top = `${mouseY}px`;
+                    
+                    const btn = form.querySelector('button[type="submit"]');
+                    if(btn) {
+                        btn.innerHTML = "PROCESSING THREAT...";
+                        btn.style.opacity = "0.7";
+                        btn.classList.add("disabled");
+                    }
+
+                    setTimeout(() => {
+                        form.submit();
+                    }, 1500); 
+                });
+            });
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 50, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#b4befe" }, 
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.4, "random": false },
+                "size": { "value": 3, "random": true },
+                "line_linked": {
+                    "enable": true, "distance": 150, "color": "#f5c2e7", "opacity": 0.2, "width": 1.5
+                },
+                "move": {
+                    "enable": true, "speed": 1.5, "direction": "none", "random": true, "straight": false, "out_mode": "out", "bounce": false
+                }
+            },
+            "interactivity": {
+                "detect_on": "window",
+                "events": {
+                    "onhover": { "enable": true, "mode": "grab" }, 
+                    "onclick": { "enable": true, "mode": "push" }, 
+                    "resize": true
+                },
+                "modes": {
+                    "grab": { "distance": 180, "line_linked": { "opacity": 0.6 } },
+                    "push": { "particles_nb": 3 }
+                }
+            },
+            "retina_detect": true
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*+<>_";
+            const glitchTexts = document.querySelectorAll(".cyber-glitch");
+
+            glitchTexts.forEach(text => {
+                if (!text.dataset.value) text.dataset.value = text.innerText;
+
+                const runScramble = (element) => {
+                    let iterations = 0;
+                    const originalText = element.dataset.value;
+                    clearInterval(element.interval);
+                    
+                    element.interval = setInterval(() => {
+                        element.innerText = originalText
+                            .split("")
+                            .map((letter, index) => {
+                                if(letter === " ") return " ";
+                                if (index < iterations) return originalText[index];
+                                return letters[Math.floor(Math.random() * letters.length)];
+                            })
+                            .join("");
+                        
+                        if (iterations >= originalText.length) clearInterval(element.interval);
+                        iterations += 1 / 2; 
+                    }, 30); 
+                };
+
+                runScramble(text);
+                text.addEventListener("mouseover", (e) => runScramble(e.target));
+            });
+        });
+    </script>
+</body>
+</html>

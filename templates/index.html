@@ -1,0 +1,413 @@
+{% extends "nav.html" %}
+{% block content %}
+{% load static %}
+
+    <div id="cyber-loader" class="crt-effect">
+        <canvas id="matrix-bg"></canvas>
+        <div class="scanline"></div>
+        
+        <div class="terminal-window" style="z-index: 10;">
+            <div class="terminal-header">
+                <div class="terminal-buttons">
+                    <span class="t-btn close-btn"></span>
+                    <span class="t-btn min-btn"></span>
+                    <span class="t-btn max-btn"></span>
+                </div>
+                <div class="terminal-title">bash - root@deepdecoy:~</div>
+            </div>
+            <div class="terminal-body">
+                <p id="term-line-1" class="term-text hidden">> <span id="typewriter-text" style="color: var(--lavender);"></span><span class="cursor-blink"></span></p>
+                <p id="term-line-2" class="term-text hidden text-success">[+] Bypassing external firewalls... OK</p>
+                <p id="term-line-3" class="term-text hidden text-success">[+] Deploying Generative Honeypot Clusters... OK</p>
+                <p id="term-line-4" class="term-text hidden text-success">[+] Neural-Phish module synced... OK</p>
+                <p id="term-line-5" class="term-text hidden" style="color: var(--accent); font-weight: bold;">[!] SYSTEM FULLY OPERATIONAL.</p>
+            </div>
+        </div>
+    </div>
+
+    <style>
+
+        #cyber-loader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-color: var(--base);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .terminal-window {
+            width: 650px;
+            max-width: 90%;
+            background-color: var(--crust);
+            border: 1px solid var(--surface1);
+            border-radius: 10px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8), 0 0 20px rgba(180, 190, 254, 0.15);
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .terminal-header {
+            background-color: var(--mantle);
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--surface1);
+            position: relative;
+        }
+
+        .terminal-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .t-btn {
+            width: 12px; height: 12px;
+            border-radius: 50%;
+        }
+        .close-btn { background-color: #ff5f56; }
+        .min-btn { background-color: #ffbd2e; }
+        .max-btn { background-color: #27c93f; }
+
+        .terminal-title {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--overlay0);
+            font-size: 0.85rem;
+        }
+
+        .terminal-body {
+            padding: 25px;
+            min-height: 250px;
+            color: var(--subtext0);
+            font-size: 1.1rem;
+        }
+
+        .term-text { margin-bottom: 8px; }
+        .hidden { display: none; }
+        .text-success { color: #a6e3a1 !important; }
+
+        /* The Blinking Terminal Cursor */
+        .cursor-blink::after {
+            content: '█';
+            margin-left: 5px;
+            color: var(--accent);
+            animation: terminalBlink 1s infinite;
+        }
+        @keyframes terminalBlink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        /* --- CRT MONITOR & MATRIX STYLES --- */
+        
+        /* The Matrix Canvas Background */
+        #matrix-bg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 1;
+            opacity: 0.25; /* Subtle so it doesn't blind the user */
+        }
+
+        /* CRT Screen Scanlines Overlay */
+        .crt-effect::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 20;
+            background-size: 100% 3px, 3px 100%;
+            pointer-events: none;
+        }
+
+        /* The Moving Green Scanline */
+        .scanline {
+            width: 100vw;
+            height: 150px;
+            background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(166,227,161,0.15) 50%, rgba(0,0,0,0) 100%);
+            position: absolute;
+            top: 0; left: 0;
+            z-index: 25;
+            animation: scanDown 5s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scanDown {
+            0% { transform: translateY(-150px); }
+            100% { transform: translateY(100vh); }
+        }
+
+        /* Chromatic Aberration on the Terminal Text */
+        .terminal-body {
+            /* This gives the text that slight red/blue 3D split effect */
+            text-shadow: 1px 0px 1px rgba(255,0,0,0.7), -1px 0px 1px rgba(0,255,255,0.7);
+        }
+
+        /* initial animatons above */
+
+        /* --- M3 CAROUSEL STYLES --- */
+        .m3-carousel-wrapper {
+            padding: 20px 4%; 
+        }
+
+        .m3-carousel {
+            border-radius: 28px; 
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 20px rgba(180, 190, 254, 0.1);
+            position: relative;
+        }
+
+        /* M3 Style Floating Arrows (FABs) */
+        .m3-arrow {
+            position: absolute !important;
+            width: 56px !important; 
+            height: 56px !important;
+            background-color: var(--surface0) !important;
+            border-radius: 50% !important;
+            top: 50% !important;
+            bottom: auto !important;
+            transform: translateY(-50%);
+            opacity: 0.85 !important;
+            border: 1px solid var(--surface1);
+            color: var(--lavender) !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+            z-index: 999 !important; 
+            cursor: pointer;
+        }
+
+        .carousel-control-prev.m3-arrow { left: 24px; }
+        .carousel-control-next.m3-arrow { right: 24px; }
+
+        .m3-arrow:hover {
+            background-color: var(--lavender) !important;
+            color: var(--base) !important;
+            opacity: 1 !important;
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 8px 24px rgba(180, 190, 254, 0.4);
+        }
+
+        .m3-arrow .carousel-control-prev-icon,
+        .m3-arrow .carousel-control-next-icon {
+            display: none;
+        }
+
+        /* M3 Dynamic Pill Indicators */
+        .m3-indicators {
+            bottom: 20px !important;
+            gap: 8px;
+        }
+
+        .m3-indicators [data-bs-target] {
+            width: 10px !important;
+            height: 10px !important;
+            border-radius: 50%;
+            background-color: var(--subtext0) !important;
+            border: none !important;
+            opacity: 0.5;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+        }
+
+        .m3-indicators .active {
+            width: 32px !important; 
+            border-radius: 10px;
+            background-color: var(--lavender) !important;
+            opacity: 1;
+        }
+    </style>
+
+    <div class="m3-carousel-wrapper mb-5 mt-3">
+        <div id="header-carousel" class="carousel slide carousel-fade m3-carousel" data-bs-ride="carousel" data-bs-interval="3700" data-bs-wrap="true" data-wrap="true">
+            
+            <div class="carousel-indicators m3-indicators">
+                <button type="button" data-bs-target="#header-carousel" data-target="#header-carousel" data-bs-slide-to="0" data-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#header-carousel" data-target="#header-carousel" data-bs-slide-to="1" data-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#header-carousel" data-target="#header-carousel" data-bs-slide-to="2" data-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img class="w-100" src="{% static 'img/Honey.jpg' %}" alt="Image" style="height: 600px; object-fit: cover; filter: brightness(0.4);">
+                    <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                        <div class="p-3" style="max-width: 900px;">
+                            <h5 class="text-uppercase animated fadeInUp" style="color: var(--accent); letter-spacing: 5px;">Adaptive Defense</h5>
+                            <h1 class="display-1 mb-md-4 animated zoomIn" style="color: var(--lavender); font-family: 'Comfortaa'; margin-bottom: 100%;">Generative AI Honeypots</h1>
+                            <br>
+                            <a href="/login" class="btn btn-primary btn-shimmer py-md-3 px-md-5 me-3 animated fadeIn" style="margin-bottom: 5%; font-family: 'C&C Red Alert [LAN]';">INITIALIZE SYSTEM</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img class="w-100" src="{% static 'img/Honey3.jpg' %}" alt="Image" style="height: 600px; object-fit: cover; filter: brightness(0.4);">
+                    <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                        <div class="p-3" style="max-width: 900px;">
+                            <h5 class="text-uppercase animated fadeInUp" style="color: var(--accent); letter-spacing: 5px; ">Active Decoy Clusters</h5>
+                            <h1 class="display-1 mb-md-4 animated zoomIn" style="color: var(--lavender); font-family: 'Comfortaa'; margin-bottom: 100%;">Evolving with every attack</h1>
+                            <br>
+                            <a href="/login" class="btn btn-primary btn-shimmer py-md-3 px-md-5 me-3 animated fadeIn" style="margin-bottom: 5%; font-family: 'C&C Red Alert [LAN]';">INITIALIZE SYSTEM</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img class="w-100" src="{% static 'img/Honey4.jpg' %}" alt="Image" style="height: 600px; object-fit: cover; filter: brightness(0.4);">
+                    <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                        <div class="p-3" style="max-width: 900px;">
+                            <h5 class="text-uppercase animated fadeInUp" style="color: var(--accent); letter-spacing: 5px;">Zero-Day Protection</h5>
+                            <h1 class="display-1 mb-md-4 animated zoomIn" style="color: var(--lavender); font-family: 'Comfortaa'; margin-bottom: 100%;">Guarding The Infrastructure</h1>
+                            <br>
+                            <a href="/login" class="btn btn-primary btn-shimmer py-md-3 px-md-5 me-3 animated fadeIn" style="margin-bottom: 5%; font-family: 'C&C Red Alert [LAN]';">INITIALIZE SYSTEM</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="carousel-control-prev m3-arrow" type="button" data-bs-target="#header-carousel" data-target="#header-carousel" data-bs-slide="prev" data-slide="prev">
+                <i class="fas fa-chevron-left" style="pointer-events: none;"></i>
+            </button>
+            <button class="carousel-control-next m3-arrow" type="button" data-bs-target="#header-carousel" data-target="#header-carousel" data-bs-slide="next" data-slide="next">
+                <i class="fas fa-chevron-right" style="pointer-events: none;"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            document.body.style.overflow = "hidden";
+            const loader = document.getElementById("cyber-loader");
+            const line1 = document.getElementById("term-line-1");
+            const line2 = document.getElementById("term-line-2");
+            const line3 = document.getElementById("term-line-3");
+            const line4 = document.getElementById("term-line-4");
+            const line5 = document.getElementById("term-line-5");
+            const typerText = document.getElementById("typewriter-text");
+
+            const command = "./initialize_decoy_protocol.sh --force";
+            let i = 0;
+
+            setTimeout(() => {
+                line1.classList.remove("hidden");
+                typeWriter();
+            }, 600);
+
+            function typeWriter() {
+                if (i < command.length) {
+                    typerText.innerHTML += command.charAt(i);
+                    i++;
+                    let speed = Math.floor(Math.random() * 50) + 30;
+                    setTimeout(typeWriter, speed);
+                } else {
+                    setTimeout(runChecks, 500);
+                }
+            }
+
+            function runChecks() {
+                line2.classList.remove("hidden");
+                setTimeout(() => { line3.classList.remove("hidden"); }, 300);
+                setTimeout(() => { line4.classList.remove("hidden"); }, 600);
+                setTimeout(() => { line5.classList.remove("hidden"); }, 1000);
+                
+                setTimeout(() => {
+                    loader.style.opacity = "0";
+                    loader.style.visibility = "hidden";
+                    document.body.style.overflow = "auto";
+                }, 2500);
+            }
+        });
+    </script> -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            document.body.style.overflow = "hidden";
+            
+            // --- 1. MATRIX RAIN SETUP ---
+            const canvas = document.getElementById('matrix-bg');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            // Hacker symbols
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%""\'#&_(),.;:?!\\|{}<>[]^~';
+            const fontSize = 14;
+            const columns = canvas.width / fontSize;
+            const drops = [];
+            
+            for (let x = 0; x < columns; x++) drops[x] = 1;
+            
+            function drawMatrix() {
+                // Fades out previous frames to create the "tail" effect
+                ctx.fillStyle = 'rgba(30, 30, 46, 0.08)'; 
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = '#a6e3a1'; // Glowing green
+                ctx.font = fontSize + 'px monospace';
+                
+                for (let i = 0; i < drops.length; i++) {
+                    const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+            }
+            // Run the matrix animation
+            const matrixInterval = setInterval(drawMatrix, 35);
+
+
+            // --- 2. TERMINAL SETUP ---
+            const loader = document.getElementById("cyber-loader");
+            const line1 = document.getElementById("term-line-1");
+            const line2 = document.getElementById("term-line-2");
+            const line3 = document.getElementById("term-line-3");
+            const line4 = document.getElementById("term-line-4");
+            const line5 = document.getElementById("term-line-5");
+            const typerText = document.getElementById("typewriter-text");
+
+            const command = "./initialize_decoy_protocol.sh --force";
+            let i = 0;
+
+            setTimeout(() => {
+                line1.classList.remove("hidden");
+                typeWriter();
+            }, 600);
+
+            function typeWriter() {
+                if (i < command.length) {
+                    typerText.innerHTML += command.charAt(i);
+                    i++;
+                    let speed = Math.floor(Math.random() * 50) + 30;
+                    setTimeout(typeWriter, speed);
+                } else {
+                    setTimeout(runChecks, 500);
+                }
+            }
+
+            function runChecks() {
+                line2.classList.remove("hidden");
+                setTimeout(() => { line3.classList.remove("hidden"); }, 300);
+                setTimeout(() => { line4.classList.remove("hidden"); }, 600);
+                setTimeout(() => { line5.classList.remove("hidden"); }, 1000);
+                
+                setTimeout(() => {
+                    loader.style.opacity = "0";
+                    loader.style.visibility = "hidden";
+                    document.body.style.overflow = "auto";
+                    
+                    // Turn off the matrix to save CPU once the loader is hidden
+                    clearInterval(matrixInterval);
+                }, 2500);
+            }
+        });
+    </script>
+{% endblock %}

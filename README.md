@@ -1,7 +1,5 @@
 # DINO-Generative models for creating honeypot system to lure cyber attackers
 
-
-
 ---
 
 # 🎯 DEEPDECOY: AI-Powered Adaptive Honeypot System
@@ -141,17 +139,9 @@ Built as a partial fulfillment for the Diploma in Computer Science Engineering (
 * **Kushal Arvind O**
 
 **Under the Guidance of:** Smt. Sukrutha H S
+
 **With the help of Backend Development of:** Alpha Tech Academy
 
 ---
 
 *Disclaimer: This system is designed strictly for academic research and defensive cybersecurity purposes.*
-
-```
-
-### How to use this:
-1. Create a new file in the root folder of your project (where your `manage.py` file is) and name it `README.md`.
-2. Copy and paste the text above into it.
-3. If you upload your project to GitHub, this file will automatically format itself into a beautiful, professional landing page for your repository!
-
-```
